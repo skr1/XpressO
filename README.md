@@ -108,6 +108,39 @@ The classification part of this project involves creating datasets for low-expre
 
 `python3 gene_file_creater_clam.py --csv_file Supplementary_Table_BC-Gene_FPKM.txt --column_name BIOMARKER_NAME --h5_source_folder tcga_breast_extracted_features/h5_files --pt_source_folder tcga_breast_extracted_features/pt_files --low_h5_folder GENE_EXP_CLAM/low_expression_genes/h5_files --low_pt_folder GENE_EXP_CLAM/low_expression_genes/pt_files --high_h5_folder GENE_EXP_CLAM/high_expression_genes/h5_files --high_pt_folder GENE_EXP_CLAM/high_expression_genes/pt_files`
 
+```
+GENE_EXP_CLAM/
+    ├── low_expression_genes
+            ├── slide_1.h5
+            ├── slide_1.pt
+            └── ...
+    └── high_expression_genes
+            ├── slide_2.pt
+            ├── slide_2.h5
+            └── ...
+	
+```
+
 Now, we create CSV files with patient_id, slide_id, and labels based on the requirements to train the CLAM SB model. 
+Make necessary changes in the code before running the script.
+
+```
+low_expression_genes_folder = "GENE_EXP_CLAM/low_expression_genes"
+high_expression_genes_folder = "GENE_EXP_CLAM/high_expression_genes"
+
+output_csv_path = "GENE_EXP_FILE.csv"
+```
+
+`python3 clam_csv_generator.py`
+
+The GENE_EXP_FILE.csv should look like below.
+
+```
+patient_id, slide_id, label
+patient_0, slide_1, low/high_gene_expressions
+```
+
+
+We will be using this GENE_EXP_CLAM going forward, and you can discard previous folders, if space constraint is an issue. We proceed with creating splits using K-fold cross-validation.
 
 ## Grad CAM
