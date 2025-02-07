@@ -28,6 +28,7 @@ To install the pre-requisite libraries, we need to install Anaconda, more inform
 Once Anaconda is installed, follow these steps to install the libraries. We have currently run all our simulations on Python 3.10.
 
 `conda env create -f env.yml`
+
 `conda activate xpresso_env`
 
 Clone the GitHub repository
