@@ -202,7 +202,7 @@ The results will be saved in the eval folder, and we will proceed with generatin
 
 ## Grad CAM
 
-To generate Heatmaps for these biomarkers, first navigate to Grad CAM/heatmaps/configs/config_template.yaml, then inside it, make changes 
+To generate Heatmaps for these biomarkers, first navigate to Grad CAM/heatmaps/config/config_template.yaml, then inside it, make changes 
 like below. data_dir here would be ORIGINAL_SLIDES_FOLDER, use raw_save_dir to save generated heatmaps. 
 
 The heatmap_demo.csv file should look something like below. Make sure to include only the test set images to see the best performance of the model.
