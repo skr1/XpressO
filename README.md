@@ -94,7 +94,8 @@ To utilize effective GPU utilization while running the feature extraction algori
 
 Run, the algorithm following the steps below. To leverage the UNI model, you would have to specify the `model_name` parameter, supported algorithms include uni_v1, resnet-50, and conch_v1.
 
-`CUDA_VISIBLE_DEVICES=0 python3 extract_features_fp.py --data_h5_dir BREAST_CANCER_PATCHES --data_slide_dir ORIGINAL_SLIDES_FOLDER --csv_path BREAST_CANCER_PATCHES/process_list_autogen.csv –model_name=”uni_v1” --feat_dir tcga_breast_extracted_features --batch_size 512 --slide_ext .svs`
+`CUDA_VISIBLE_DEVICES=0 python3 extract_features_fp.py --data_h5_dir BREAST_CANCER_PATCHES --data_slide_dir ORIGINAL_SLIDES_FOLDER --csv_path BREAST_CANCER_PATCHES/process_list_autogen.csv 
+--model_name=”uni_v1” --feat_dir tcga_breast_extracted_features --batch_size 512 --slide_ext .svs`
 
 The resultant file tcga_breast_extracted_features, looks like this
 ```
