@@ -50,7 +50,7 @@ Now, that we have all these setups done, we are good to go with training a Deep 
 
 Navigate to the Segmentation folder `cd Segmentation`
 
-Once we have the slides, and installed the pre-requisite libraries, we proceed with segmenting regions of interest using tcga coordinates available in the presets folder under the Segmentation folder. We borrowed implementational guidelines from this [repo](https://github.com/mahmoodlab/CLAM).
+Once we have the slides, and installed the pre-requisite libraries, we proceed with segmenting regions of interest using TCGA coordinates available in the presets folder under the Segmentation folder. We borrowed implementational guidelines from this [repo](https://github.com/mahmoodlab/CLAM).
 
 ```
 ORIGINAL_SLIDES_FOLDER/
@@ -60,6 +60,8 @@ ORIGINAL_SLIDES_FOLDER/
 ```
 
 `python3 create_patches_fp.py --source ORIGINAL_SLIDES_FOLDER --save_dir BREAST_CANCER_PATCHES --patch_size 256 --preset tcga.csv --seg --patch --stitch`
+
+Normally, it would take somewhere about 30-40 mins per slide, depending on the file size.
 
 ```
 BREAST_CANCER_PATCHES/
