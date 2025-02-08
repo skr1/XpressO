@@ -61,7 +61,7 @@ ORIGINAL_SLIDES_FOLDER/
 
 `python3 create_patches_fp.py --source ORIGINAL_SLIDES_FOLDER --save_dir BREAST_CANCER_PATCHES --patch_size 256 --preset tcga.csv --seg --patch --stitch`
 
-Normally, it would take somewhere about 30-40 mins per slide, depending on the file size.
+It took us 40 minutes to create segmented patches for 191 samples.
 
 ```
 BREAST_CANCER_PATCHES/
