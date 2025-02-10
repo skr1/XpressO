@@ -92,10 +92,10 @@ To utilize effective GPU utilization while running the feature extraction algori
 
 `export CUDA_VISIBLE_DEVICES=0`
 
-Run, the algorithm following the steps below. To leverage the UNI model, you would have to specify the `model_name` parameter, supported algorithms include uni_v1, resnet-50, and conch_v1. The default model being used is uni_v1, so if you want to change that, include the parameter in the command below to change it to either of the available models.
+Run, the algorithm following the steps below. To leverage the UNI model, you would have to specify the `model_name` parameter, supported algorithms include uni_v1, resnet-50, and conch_v1.
 
 `CUDA_VISIBLE_DEVICES=0 python3 extract_features_fp.py --data_h5_dir BREAST_CANCER_PATCHES --data_slide_dir ORIGINAL_SLIDES_FOLDER --csv_path BREAST_CANCER_PATCHES/process_list_autogen.csv 
---feat_dir tcga_breast_extracted_features --batch_size 512 --slide_ext .svs`
+--model_name=”uni_v1” --feat_dir tcga_breast_extracted_features --batch_size 512 --slide_ext .svs`
 
 The resultant file tcga_breast_extracted_features, looks like this
 ```
@@ -114,9 +114,14 @@ tcga_breast_extracted_features/
 
 The classification part of this project involves creating datasets for low-expression, and high-expression genes, and we leverage FPKM gene expression tables for creating relevant datasets. To proceed with this, we run the commands below.
 
-Navigate to the Classification folder using `cd Classification`
+gene_file_creater_clam.py works for tab delimited files and gene_file_creater_clam_v2.py works for comma delimited files.
+
+Supplementary_Table_BC-Gene_FPKM.txt is the 89 samples gene expression file, we run the following command:
 
 `python3 gene_file_creater_clam.py --csv_file Supplementary_Table_BC-Gene_FPKM.txt --column_name BIOMARKER_NAME --h5_source_folder tcga_breast_extracted_features/h5_files --pt_source_folder tcga_breast_extracted_features/pt_files --low_h5_folder GENE_EXP_CLAM/low_expression_genes/h5_files --low_pt_folder GENE_EXP_CLAM/low_expression_genes/pt_files --high_h5_folder GENE_EXP_CLAM/high_expression_genes/h5_files --high_pt_folder GENE_EXP_CLAM/high_expression_genes/pt_files`
+
+We ran the same command for the 102 samples gene expression using file Master_concat_2ndattempt_uniq.txt.
+Make sure to change the destination folder for the 102 samples. 
 
 ```
 GENE_EXP_CLAM/
@@ -129,8 +134,18 @@ GENE_EXP_CLAM/
 	
 ```
 
+Now, we merge the two folders using the code python_file_merger.py.
+Make necessary changes in the code for the source and destination folders
+
+```
+src_folders = ["GENE_EXP_CLAM_1", "GENE_EXP_CLAM_2"]
+dest_folder = "GENE_EXP_CLAM_merged"
+```
+Run 
+`python3 python_file_merger.py`
+
 Now, we create CSV files with patient_id, slide_id, and labels based on the requirements to train the CLAM SB model. 
-Make necessary changes in the code before running the script.
+Make necessary changes in the code clam_csv_generator.py before running the script.
 
 ```
 low_expression_genes_folder = "GENE_EXP_CLAM/low_expression_genes"
@@ -168,6 +183,8 @@ Finally, add the arguments below to optimize the pipelines in splits, main, and 
 
 We will be using this GENE_EXP_CLAM going forward, and you can discard previous folders, if space constraint is an issue. We proceed with creating splits using K-fold cross-validation. 
 
+Navigate to the Classification folder using `cd Classification`
+
 `python3 create_splits_seq.py --task gene_exp --seed 1 --k 12`
 
 --task is the task we just defined, gene_exp
@@ -188,9 +205,9 @@ If you already have one, then run
 
 The split dataset will be saved under the splits folder, and we will use that for training the model. For the training process, run the command below (--embed_dim should be 512 
 for CONCH, 1024 for UNI and resnet-50). GENE_EXP_CLAM would be the folder where you save the biomarker-specific low expressions and high expressions 
-h5, pt files. Run training and evaluation in tmux. exp_code is the split folder location that it would take for training.
+h5, pt files. Run training and evaluation in tmux. split_dir is the split folder location that it would take for training.
 
-`CUDA_VISIBLE_DEVICES=0 python3 main.py --drop_out 0.25 --early_stopping --lr 2e-4 --k 12 --exp_code gene_exp_100 --weighted_sample --bag_loss ce --task gene_exp --model_type clam_sb --log_data --data_root_dir GENE_EXP_CLAM --embed_dim 1024 >train.txt 2>&1 &`
+`CUDA_VISIBLE_DEVICES=0 python3 main.py --drop_out 0.25 --early_stopping --lr 2e-4 --k 12 --split_dir gene_exp --exp_code gene_exp_100 --weighted_sample --bag_loss ce --task gene_exp --model_type clam_sb --log_data --data_root_dir GENE_EXP_CLAM --embed_dim 1024 >train.txt 2>&1 &`
 
 Here `>train.txt 2>&1 &` saves the progress in train.txt, and assigns a process ID to it, this makes the process uninterruptable and you can run the code smoothly.
 
@@ -203,12 +220,14 @@ To evaluate the script execute the command below,
 
 The results will be saved in the eval folder, and we will proceed with generating heatmaps now.
 
+Make sure to change the name of the csv file corresponding to the biomarker in the main.py and eval.py scripts.
+
 ## Grad CAM
 
-To generate Heatmaps for these biomarkers, first navigate to Grad CAM/heatmaps/config/config_template.yaml, then inside it, make changes 
+To generate Heatmaps for these biomarkers, first navigate to GradCAM/heatmaps/configs/config_template.yaml, then inside it, make changes 
 like below. data_dir here would be ORIGINAL_SLIDES_FOLDER, use raw_save_dir to save generated heatmaps. 
 
-The heatmap_demo.csv file should look something like below. Make sure to include only the test set images to see the best performance of the model.
+The heatmap_demo.csv file within the process_lists folder should look something like below. Make sure to include only the test set images to see the best performance of the model.
 
 ```
 slide_id, label

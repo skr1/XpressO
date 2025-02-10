@@ -13,7 +13,7 @@ parser.add_argument('--seed', type=int, default=1,
                     help='random seed (default: 1)')
 parser.add_argument('--k', type=int, default=10,
                     help='number of splits (default: 10)')
-parser.add_argument('--task', type=str, choices=['gene_exp_scgb1d2', 'task_1_tumor_vs_normal', 'task_2_tumor_subtyping'])
+parser.add_argument('--task', type=str, choices=['gene_exp', 'task_1_tumor_vs_normal', 'task_2_tumor_subtyping'])
 parser.add_argument('--val_frac', type=float, default= 0.1,
                     help='fraction of labels for validation (default: 0.1)')
 parser.add_argument('--test_frac', type=float, default= 0.1,
@@ -22,9 +22,9 @@ parser.add_argument('--test_frac', type=float, default= 0.1,
 args = parser.parse_args()
 
 
-if args.task == 'gene_exp_scgb1d2':
+if args.task == 'gene_exp':
     args.n_classes=2
-    dataset = Generic_WSI_Classification_Dataset(csv_path = '/home/ubuntu/scgb1d2_191_gene_expressions.csv',
+    dataset = Generic_WSI_Classification_Dataset(csv_path = '/home/ubuntu/mmp3_191_gene_expression.csv',
                             shuffle = False, 
                             seed = args.seed, 
                             print_info = True,

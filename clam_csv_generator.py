@@ -2,8 +2,8 @@ import os
 import pandas as pd
 
 # Define the folders
-low_expression_genes_folder = "/home/ubuntu/scgb1d2_191_gene_exp_clam_UNI/low_expression_genes"
-high_expression_genes_folder = "/home/ubuntu/scgb1d2_191_gene_exp_clam_UNI/high_expression_genes"
+low_expression_genes_folder = "/home/ubuntu/mmp3_191_gene_exp_clam_UNI/low_expression_genes"
+high_expression_genes_folder = "/home/ubuntu/mmp3_191_gene_exp_clam_UNI/high_expression_genes"
 
 # Subfolders containing h5 files
 low_h5_folder = os.path.join(low_expression_genes_folder, "h5_files")
@@ -40,7 +40,7 @@ parse_files(high_h5_folder, "high_expression_genes")
 df = pd.DataFrame(data, columns=["case_id", "slide_id", "label"])
 
 # Save to CSV
-output_csv_path = "/home/ubuntu/scgb1d2_191_gene_expressions.csv"
+output_csv_path = "/home/ubuntu/mmp3_191_gene_expression.csv"
 df.to_csv(output_csv_path, index=False)
 
 print("CSV file has been created successfully.")

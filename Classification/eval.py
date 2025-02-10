@@ -87,7 +87,7 @@ if args.task == 'gene_exp':
         'high_expression_genes': os.path.join(args.data_root_dir, 'high_expression_genes')
     }
     dataset = Generic_MIL_Dataset(
-        csv_path='/home/ubuntu/ptprz1_191_gene_expressions.csv',
+        csv_path='/home/ubuntu/mmp3_191_gene_expression.csv',
         data_dir=data_dirs,
         shuffle=False,
         print_info=True,

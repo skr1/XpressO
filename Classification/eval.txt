@@ -1,0 +1,49 @@
+{'task': 'gene_exp', 'split': 'test', 'save_dir': './eval_results/EVAL_gene_exp_100_s1_cv', 'models_dir': 'results/gene_exp_100_s1', 'model_type': 'clam_sb', 'drop_out': 0.25, 'model_size': 'small'}
+label column: label
+label dictionary: {'low_expression_genes': 0, 'high_expression_genes': 1}
+number of classes: 2
+slide-level counts:  
+ label
+0    94
+1    93
+Name: count, dtype: int64
+Patient-LVL; Number of samples registered in class 0: 94
+Slide-LVL; Number of samples registered in class 0: 94
+Patient-LVL; Number of samples registered in class 1: 93
+Slide-LVL; Number of samples registered in class 1: 93
+Init Model
+CLAM_SB(
+  (attention_net): Sequential(
+    (0): Linear(in_features=1024, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Dropout(p=0.25, inplace=False)
+    (3): Attn_Net_Gated(
+      (attention_a): Sequential(
+        (0): Linear(in_features=512, out_features=256, bias=True)
+        (1): Tanh()
+        (2): Dropout(p=0.25, inplace=False)
+      )
+      (attention_b): Sequential(
+        (0): Linear(in_features=512, out_features=256, bias=True)
+        (1): Sigmoid()
+        (2): Dropout(p=0.25, inplace=False)
+      )
+      (attention_c): Linear(in_features=256, out_features=1, bias=True)
+    )
+  )
+  (classifiers): Linear(in_features=512, out_features=2, bias=True)
+  (instance_classifiers): ModuleList(
+    (0-1): 2 x Linear(in_features=512, out_features=2, bias=True)
+  )
+  (instance_loss_fn): CrossEntropyLoss()
+)
+Total number of parameters: 790791
+Total number of trainable parameters: 790791
+Init Loaders
+TRYING TO PRINT AUC
+AUC CI range (np.float64(0.20831980519480514), np.float64(0.7875000000000001))
+test_error:  0.3888888888888889
+auc:  0.49790990259740264
+Precision:  0.6142623716153128
+Recall:  0.6111111111111112
+F1:  0.5813823857302118
