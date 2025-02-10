@@ -109,7 +109,7 @@ tcga_breast_extracted_features/
             ├── slide_2.pt
             └── ...
 ```
-
+feature.txt is the log file generated after the command is run.
 ## Classification
 
 The classification part of this project involves creating datasets for low-expression, and high-expression genes, and we leverage FPKM gene expression tables for creating relevant datasets. To proceed with this, we run the commands below.
@@ -213,12 +213,16 @@ Here `>train.txt 2>&1 &` saves the progress in train.txt, and assigns a process 
 
 Our approach follows training the clam SB model using 95% confidence intervals, and so when the training completes, make sure to save the results folder with corresponding biomarkers, if the process is sequential, with multiple biomarkers.
 
+train.txt is the log file generated after the command is run.
+
 To evaluate the script execute the command below,
 
 `CUDA_VISIBLE_DEVICES=0 python3 eval.py --k 12 --models_exp_code SAVED_MODEL_RESULTS --save_exp_code EVAL_MODEL_RESULTS --task gene_exp --model_type clam_sb --results_dir results 
 -data_root_dir GENE_EXP_CLAM --embed_dim 1024>eval.txt 2>&1 &`
 
 The results will be saved in the eval folder, and we will proceed with generating heatmaps now.
+
+eval.txt is the log file generated after the command is run.
 
 Make sure to change the name of the csv file corresponding to the biomarker in the main.py and eval.py scripts.
 
