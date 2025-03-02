@@ -300,16 +300,16 @@ sample_arguments:
 
 `CUDA_VISIBLE_DEVICES=0 python3 create_heatmaps.py --config config_template.yaml`
 
-# Testing a New Test Set Without Retraining
+## Testing a New Test Set Without Retraining
 
-## Prepare the New Test Set
+### Prepare the New Test Set
 - Obtain the svs files for the new test set.
 - Repeat the Segmentation** and Feature Extraction** steps:
 
   ```bash
   python3 create_patches_fp.py --source NEW_TEST_ORIGINAL_SLIDES --save_dir NEW_TEST_PATCHES --patch_size 256 --preset tcga.csv --seg --patch --stitch
 
-## Extract Features for the New Test Set
+### Extract Features for the New Test Set
 Navigate to the Feature Extraction folder:
 
 `cd Feature_Extraction`
@@ -320,7 +320,7 @@ Run the feature extraction command:
 
 This will generate feature embeddings in NEW_TEST_FEATURES/.
 
-## Generate Gene Expression Classification Files
+### Generate Gene Expression Classification Files
 Use the gene_file_creater_clam.py script:
 
 `python3 gene_file_creater_clam.py --csv_file NEW_TEST_GENE_EXPRESSION.txt --column_name BIOMARKER_NAME --h5_source_folder NEW_TEST_FEATURES/h5_files --pt_source_folder NEW_TEST_FEATURES/pt_files --low_h5_folder NEW_TEST_GENE_EXP_CLAM/low_expression_genes/h5_files --low_pt_folder NEW_TEST_GENE_EXP_CLAM/low_expression_genes/pt_files --high_h5_folder NEW_TEST_GENE_EXP_CLAM/high_expression_genes/h5_files --high_pt_folder NEW_TEST_GENE_EXP_CLAM/high_expression_genes/pt_files`
@@ -334,19 +334,19 @@ Update the script with:
 `src_folders = ["GENE_EXP_CLAM", "NEW_TEST_GENE_EXP_CLAM"]
 dest_folder = "GENE_EXP_CLAM_MERGED"`
 
-## Add the New Test Set to the Best Performing Split
+### Add the New Test Set to the Best Performing Split
 
 Locate the best-performing split for the specific biomarker and append the new test set in the test column:
 
 `Classification/results/splits_x.csv`
 
-## Evaluate the Model on the New Test Set
+### Evaluate the Model on the New Test Set
 
 Run the evaluation script:
 
 `CUDA_VISIBLE_DEVICES=0 python3 eval.py --k 12 --models_exp_code SAVED_MODEL_RESULTS --save_exp_code EVAL_NEW_TEST_RESULTS --task gene_exp --model_type clam_sb --results_dir results --data_root_dir GENE_EXP_CLAM_MERGED --embed_dim 1024 > eval_new_test.txt 2>&1 &`
 
-## Generate Heatmaps for the New Test Set
+### Generate Heatmaps for the New Test Set
 
 Update heatmap_demo.csv in process_lists/ with:
 
