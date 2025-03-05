@@ -29,8 +29,8 @@ def combine_folders(src_folders, dest_folder):
                             print(f"Copied: {src_file} -> {dest_file}")
 
 # Define source folders and destination folder
-src_folders = ["/home/ubuntu/GENE_EXP_CLAM", "/home/ubuntu/GENE_EXP_CLAM_102"]
-dest_folder = "/home/ubuntu/mmp3_191_gene_exp_clam_UNI"
+src_folders = ["/home/ubuntu/esr1_191_gene_exp_clam_UNI", "/home/ubuntu/XpressO/esr1_20_gene_exp_clam_uni"]
+dest_folder = "/home/ubuntu/esr1_211_gene_exp_clam_UNI"
 
 # Combine the folders
 combine_folders(src_folders, dest_folder)
