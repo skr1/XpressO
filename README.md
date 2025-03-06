@@ -228,7 +228,7 @@ Make sure to change the name of the csv file corresponding to the biomarker in t
 
 ## Heatmap Generation
 
-To generate Heatmaps for these biomarkers, first navigate to HeatMaps/heatmaps/configs/config_template.yaml, then inside it, make changes 
+To generate Heatmaps for these biomarkers, first navigate to Heatmap/heatmaps/configs/config_template.yaml, then inside it, make changes 
 like below. data_dir here would be ORIGINAL_SLIDES_FOLDER, use raw_save_dir to save generated heatmaps. 
 
 The heatmap_demo.csv file within the process_lists folder should look something like below. Make sure to include only the test set images to see the best performance of the model.
@@ -300,3 +300,64 @@ sample_arguments:
 
 `CUDA_VISIBLE_DEVICES=0 python3 create_heatmaps.py --config config_template.yaml`
 
+## Evaluating a New Test Set Without Retraining
+
+### Prepare the New Test Set
+- Obtain the svs files for the new test set.
+- Repeat the Segmentation** and Feature Extraction** steps:
+
+  ```bash
+  python3 create_patches_fp.py --source NEW_TEST_ORIGINAL_SLIDES --save_dir NEW_TEST_PATCHES --patch_size 256 --preset tcga.csv --seg --patch --stitch
+
+### Extract Features for the New Test Set
+Navigate to the Feature Extraction folder:
+
+`cd Feature_Extraction`
+
+Run the feature extraction command:
+
+`CUDA_VISIBLE_DEVICES=0 python3 extract_features_fp.py --data_h5_dir NEW_TEST_PATCHES --data_slide_dir NEW_TEST_ORIGINAL_SLIDES --csv_path NEW_TEST_PATCHES/process_list_autogen.csv --model_name="uni_v1" --feat_dir NEW_TEST_FEATURES --batch_size 512 --slide_ext .svs`
+
+This will generate feature embeddings in NEW_TEST_FEATURES/.
+
+### Generate Gene Expression Classification Files
+Use the gene_file_creater_clam.py script:
+
+`python3 gene_file_creater_clam.py --csv_file NEW_TEST_GENE_EXPRESSION.txt --column_name BIOMARKER_NAME --h5_source_folder NEW_TEST_FEATURES/h5_files --pt_source_folder NEW_TEST_FEATURES/pt_files --low_h5_folder NEW_TEST_GENE_EXP_CLAM/low_expression_genes/h5_files --low_pt_folder NEW_TEST_GENE_EXP_CLAM/low_expression_genes/pt_files --high_h5_folder NEW_TEST_GENE_EXP_CLAM/high_expression_genes/h5_files --high_pt_folder NEW_TEST_GENE_EXP_CLAM/high_expression_genes/pt_files`
+
+Merge the new test dataset with the original dataset:
+
+'python3 python_file_merger.py'
+
+Update the script with:
+
+`src_folders = ["GENE_EXP_CLAM", "NEW_TEST_GENE_EXP_CLAM"]
+dest_folder = "GENE_EXP_CLAM_MERGED"`
+
+### Add the New Test Set to the Best Performing Split
+
+Locate the best-performing split for the specific biomarker and append the new test set in the test column:
+
+`Classification/results/splits_x.csv`
+
+### Evaluate the Model on the New Test Set
+
+Run the evaluation script:
+
+`CUDA_VISIBLE_DEVICES=0 python3 eval.py --k 12 --models_exp_code SAVED_MODEL_RESULTS --save_exp_code EVAL_NEW_TEST_RESULTS --task gene_exp --model_type clam_sb --results_dir results --data_root_dir GENE_EXP_CLAM_MERGED --embed_dim 1024 > eval_new_test.txt 2>&1 &`
+
+### Generate Heatmaps for the New Test Set
+
+Update heatmap_demo.csv in process_lists/ with:
+
+`slide_id, label
+new_slide_1, low/high_gene_expressions
+new_slide_2, low/high_gene_expressions`
+
+Modify configs/config_template.yaml to point to the new dataset.
+
+Run the heatmap generation script:
+
+`CUDA_VISIBLE_DEVICES=0 python3 create_heatmaps.py --config config_template.yaml`
+
+This will generate heatmaps for the new test set.
