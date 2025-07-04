@@ -361,3 +361,9 @@ Run the heatmap generation script:
 `CUDA_VISIBLE_DEVICES=0 python3 create_heatmaps.py --config config_template.yaml`
 
 This will generate heatmaps for the new test set.
+
+## Xpresso-melanoma
+
+For XpressO-Melanoma, we apply the model to predict BRAF V600E mutation status directly from diagnostic whole-slide images (WSIs) of cutaneous melanoma. Using cases from The Cancer Genome Atlas (TCGA), we repurposed the original XpressO pipeline to classify mutation labels specific to BRAF V600E.
+This melanoma-specific version retains the same modular structure and processing steps as the original pipeline - including segmentation, feature extraction, classification, and heatmap visualization.
+We added a new dataset comprising TCGA sample IDs with corresponding BRAF V600E mutation status labels (BVW = BRAF V600E wildtype, BVE = BRAF V600E mutant), which were used to train and evaluate the model. The sample list is provided in melanoma_tcga_braf_labels.tsv.
